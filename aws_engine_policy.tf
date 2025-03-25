@@ -19,3 +19,12 @@ data "vault_policy_document" "aws_engine_admin" {
   }
   # ======= End AWS secrets engine setup =========
 }
+
+# Not sure where this is going to go
+data "vault_policy_document" "aws_engine_policies" {
+  rule {
+    path         = "sys/policies/acl/aws-*"
+    capabilities = ["create", "read", "update", "list", "delete"]
+    description  = "manage policies for dynamic AWS credentials (prefix by convention)"
+  }
+}

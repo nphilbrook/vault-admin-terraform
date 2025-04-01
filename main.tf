@@ -1,5 +1,4 @@
 module "cloud_operations" {
-  source  = "app.terraform.io/philbrook/bu-namespace/vault"
-  version = "0.0.3"
-  name    = "Cloud-Operations"
+  source = "github.com/nphilbrook/terraform-vault-bu-namespace?ref=d0f43ced17b2dec3abfa85fc66aacae1565e3642"
+  name   = "Cloud-Operations"
 }

@@ -1,12 +1,7 @@
-locals {
-  saml_path = "saml"
-}
-
 # Fetch the current namespace, needed for the ACS Callback URL below
 data "vault_namespace" "current" {}
 
 resource "vault_saml_auth_backend" "auth0" {
-  path             = local.saml_path
   idp_metadata_url = "https://dev-duhq6zvtxhjtgss0.us.auth0.com/samlp/metadata/djIEvjayGHtOJsVaaZwOWhiHvQkmaSob"
   entity_id        = "${var.vault_address}/v1/auth/saml"
   acs_urls         = ["${var.vault_address}/v1/${data.vault_namespace.current.id}saml/callback"]
@@ -17,7 +12,7 @@ resource "vault_saml_auth_backend" "auth0" {
 # but we can fetch it.
 # It's frustrating that we have to do this
 data "vault_generic_secret" "saml_mount" {
-  path = "sys/auth/${local.saml_path}"
+  path = "sys/auth/${vault_saml_auth_backend.auth0.path}"
 }
 
 resource "vault_saml_auth_backend_role" "default" {

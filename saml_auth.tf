@@ -4,7 +4,7 @@ data "vault_namespace" "current" {}
 resource "vault_saml_auth_backend" "auth0" {
   idp_metadata_url = "https://dev-duhq6zvtxhjtgss0.us.auth0.com/samlp/metadata/djIEvjayGHtOJsVaaZwOWhiHvQkmaSob"
   entity_id        = "${var.vault_address}/v1/auth/saml"
-  acs_urls         = ["${var.vault_address}/v1/${data.vault_namespace.current.id}saml/callback"]
+  acs_urls         = ["${var.vault_address}/v1/${data.vault_namespace.current.id}auth/saml/callback"]
   default_role     = "default"
 }
 

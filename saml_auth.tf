@@ -25,10 +25,10 @@ resource "vault_saml_auth_backend_role" "default" {
 }
 
 # break glass super admin
-resource "vault_saml_auth_backend_role" "hcp_root" {
+resource "vault_saml_auth_backend_role" "break_glass" {
   path             = vault_saml_auth_backend.auth0.path
-  name             = "vault-super-admin"
-  token_policies   = ["hcp-root"]
+  name             = "break-glass"
+  token_policies   = ["break-glass"]
   groups_attribute = "http://schemas.auth0.com/vault-roles"
   bound_attributes = {
     "http://schemas.auth0.com/vault-super-admin" = "true"

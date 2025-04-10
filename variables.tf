@@ -3,7 +3,6 @@ variable "vault_address" {
   description = "THe address of the Vault cluster. Needed for SAML auth setup."
 }
 
-
 variable "initial_aws_access_key_id" {
   type        = string
   default     = null

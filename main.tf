@@ -8,3 +8,10 @@ module "cloud_operations" {
   initial_aws_access_key_id     = var.initial_aws_access_key_id
   initial_aws_secret_access_key = var.initial_aws_secret_access_key
 }
+
+module "appdev" {
+  source              = "app.terraform.io/philbrook/bu-namespace/vault"
+  version             = "1.0.3"
+  name                = "AppDev"
+  auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
+}

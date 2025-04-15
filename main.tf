@@ -2,7 +2,6 @@ module "cloud_operations" {
   source  = "app.terraform.io/philbrook/bu-namespace/vault"
   version = "1.0.2"
   # source = "github.com/nphilbrook/terraform-vault-bu-namespace?ref=nphilbrook_policies"
-  # source                        = "/home/nphilbrook/repos/bankunited/terraform-vault-bu-namespace"
   name                          = "Cloud-Operations"
   auth_mount_accessor           = data.vault_generic_secret.saml_mount.data.accessor
   configure_aws                 = true

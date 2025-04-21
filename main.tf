@@ -1,7 +1,7 @@
 module "cloud_operations" {
-  # source  = "app.terraform.io/philbrook/bu-namespace/vault"
-  # version = "1.0.3"
-  source                        = "github.com/nphilbrook/terraform-vault-bu-namespace?ref=nphilbrook_gha"
+  source  = "app.terraform.io/philbrook/bu-namespace/vault"
+  version = "1.0.3"
+  # source                        = "github.com/nphilbrook/terraform-vault-bu-namespace?ref=nphilbrook_gha"
   name                          = "Cloud-Operations"
   auth_mount_accessor           = data.vault_generic_secret.saml_mount.data.accessor
   configure_aws                 = true
@@ -10,8 +10,10 @@ module "cloud_operations" {
 }
 
 module "appdev" {
-  source              = "app.terraform.io/philbrook/bu-namespace/vault"
-  version             = "1.0.3"
+  # source              = "app.terraform.io/philbrook/bu-namespace/vault"
+  # version             = "1.0.3"
+  source              = "github.com/nphilbrook/terraform-vault-bu-namespace?ref=nphilbrook_gha"
   name                = "AppDev"
+  configure_gha       = true
   auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
 }

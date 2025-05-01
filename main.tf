@@ -26,3 +26,18 @@ module "integrations" {
   gha_org             = "nphilbrook"
   auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
 }
+
+# import {
+#   id = "kv-import-test"
+#   to = vault_mount.kv_import_test
+# }
+
+resource "vault_mount" "kv_import_test" {
+  namespace = "Cloud-Operations"
+  path      = "kv-import-test"
+  type      = "kv-v2"
+  options = {
+    version = "2"
+    type    = "kv-v2"
+  }
+}

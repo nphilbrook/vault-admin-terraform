@@ -1,6 +1,11 @@
 variable "vault_address" {
   type        = string
-  description = "THe address of the Vault cluster. Needed for SAML auth setup."
+  description = "The address of the Vault cluster. Needed for SAML auth setup."
+}
+
+variable "vault_proxy_address" {
+  type        = string
+  description = "The address of the Vault cluster. Needed for SAML auth setup."
 }
 
 variable "initial_aws_access_key_id" {

@@ -112,12 +112,7 @@ data "vault_policy_document" "admin" {
   }
 
   ### per namespace paths
-  rule {
-    path         = "sys/policies/acl"
-    capabilities = ["list"]
-    description  = "List existing policies"
-  }
-
+  ### FIGURE OUT THE UI ERROR MESSAGE
   rule {
     path         = "+/sys/policies/acl*"
     capabilities = ["read", "list"]
@@ -131,7 +126,7 @@ data "vault_policy_document" "admin" {
   }
 
   rule {
-    path         = "+/sys/auth*"
+    path         = "+/sys/auth/*"
     capabilities = ["read", "list"]
     description  = "List auth methods"
   }
@@ -149,7 +144,7 @@ data "vault_policy_document" "admin" {
   }
 
   rule {
-    path         = "+/sys/mounts*"
+    path         = "+/sys/mounts/*"
     capabilities = ["read", "list"]
     description  = "Read/list secrets engines"
   }

@@ -16,12 +16,6 @@ resource "vault_policy" "break_glass" {
 # It includes this namespace and one level of child namespaces via the below policy documents
 data "vault_policy_document" "admin_admin" {
   rule {
-    path         = "sys/policies/acl"
-    capabilities = ["list"]
-    description  = "List existing policies"
-  }
-
-  rule {
     path         = "sys/policies/acl*"
     capabilities = ["read", "list"]
     description  = "Read ACL policies"
@@ -110,114 +104,9 @@ data "vault_policy_document" "admin_admin" {
     capabilities = ["read", "list"]
     description  = "Read/list locked users"
   }
-
-  rule {
-    path         = "+/"
-    capabilities = ["read"]
-    description  = "Allow UI to access/enter immediate child namespaces"
-  }
-
-  # DELET ME
-  rule {
-    path         = "sys/policies/acl"
-    capabilities = ["list"]
-    description  = "List existing policies"
-  }
-
-  rule {
-    path         = "+/sys/policies/acl*"
-    capabilities = ["read", "list"]
-    description  = "Read ACL policies"
-  }
-
-  rule {
-    path         = "+/auth*"
-    capabilities = ["read", "list"]
-    description  = "Read/list auth methods broadly across Vault"
-  }
-
-  rule {
-    path         = "+/sys/auth*"
-    capabilities = ["read", "list"]
-    description  = "List auth methods"
-  }
-
-  rule {
-    path         = "+/identity*"
-    capabilities = ["read", "list"]
-    description  = "Read identity objects"
-  }
-
-  rule {
-    path         = "+/sys/namespaces/*"
-    capabilities = ["read", "list"]
-    description  = "Read/list namespaces"
-  }
-
-  rule {
-    path         = "+/sys/mounts*"
-    capabilities = ["read", "list"]
-    description  = "Read/list secrets engines"
-  }
-
-  rule {
-    path         = "+/sys/config/ui"
-    capabilities = ["read", "list"]
-    description  = "Configure Vault UI"
-  }
-
-  rule {
-    path         = "+/sys/leases*"
-    capabilities = ["read", "list"]
-    description  = "Read/list leases"
-  }
-
-  rule {
-    path         = "+/sys/health"
-    capabilities = ["read"]
-    description  = "Read health checks"
-  }
-
-  rule {
-    path         = "+/sys/quotas*"
-    capabilities = ["read", "list"]
-    description  = "Read/list quotas"
-  }
-
-  rule {
-    path         = "+/sys/version-history"
-    capabilities = ["read", "list"]
-    description  = "List version history"
-  }
-
-  rule {
-    path         = "+/sys/plugins*"
-    capabilities = ["read", "list"]
-    description  = "Read/list plugins, if any"
-  }
-
-  rule {
-    path         = "+/sys/monitor"
-    capabilities = ["read"]
-    description  = "Stream Vault logs"
-  }
-
-  rule {
-    path         = "+/sys/managed-keys*"
-    capabilities = ["read", "list"]
-    description  = "Read/list managed keys"
-  }
-
-  rule {
-    path         = "+/sys/locked-users*"
-    capabilities = ["read", "list"]
-    description  = "Read/list locked users"
-  }
-  # END DELETE ME
-
 }
 
-resource "vault_policy" "admin" {
+resource "vault_policy" "admin_admin" {
   name   = "admin"
   policy = data.vault_policy_document.admin_admin.hcl
 }
@@ -228,107 +117,106 @@ output "children" {
   value = data.vault_namespaces.children.paths
 }
 
-output "children_fq" {
-  value = data.vault_namespaces.children.paths_fq
-}
-
 data "vault_policy_document" "ns_admin" {
-  count = 0
+  for_each = data.vault_namespaces.children.paths
   ### per namespace paths
   rule {
-    path         = "sys/policies/acl"
-    capabilities = ["list"]
-    description  = "List existing policies"
-  }
-
-  rule {
-    path         = "+/sys/policies/acl*"
+    path         = "${each.value}/sys/policies/acl*"
     capabilities = ["read", "list"]
     description  = "Read ACL policies"
   }
 
   rule {
-    path         = "+/auth*"
+    path         = "${each.value}/auth*"
     capabilities = ["read", "list"]
     description  = "Read/list auth methods broadly across Vault"
   }
 
   rule {
-    path         = "+/sys/auth*"
+    path         = "${each.value}/sys/auth*"
     capabilities = ["read", "list"]
     description  = "List auth methods"
   }
 
   rule {
-    path         = "+/identity*"
+    path         = "${each.value}/identity*"
     capabilities = ["read", "list"]
     description  = "Read identity objects"
   }
 
   rule {
-    path         = "+/sys/namespaces/*"
+    path         = "${each.value}/sys/namespaces/*"
     capabilities = ["read", "list"]
     description  = "Read/list namespaces"
   }
 
   rule {
-    path         = "+/sys/mounts*"
+    path         = "${each.value}/sys/mounts*"
     capabilities = ["read", "list"]
     description  = "Read/list secrets engines"
   }
 
   rule {
-    path         = "+/sys/config/ui"
+    path         = "${each.value}/sys/config/ui"
     capabilities = ["read", "list"]
     description  = "Configure Vault UI"
   }
 
   rule {
-    path         = "+/sys/leases*"
+    path         = "${each.value}/sys/leases*"
     capabilities = ["read", "list"]
     description  = "Read/list leases"
   }
 
   rule {
-    path         = "+/sys/health"
+    path         = "${each.value}/sys/health"
     capabilities = ["read"]
     description  = "Read health checks"
   }
 
   rule {
-    path         = "+/sys/quotas*"
+    path         = "${each.value}/sys/quotas*"
     capabilities = ["read", "list"]
     description  = "Read/list quotas"
   }
 
   rule {
-    path         = "+/sys/version-history"
+    path         = "${each.value}/sys/version-history"
     capabilities = ["read", "list"]
     description  = "List version history"
   }
 
   rule {
-    path         = "+/sys/plugins*"
+    path         = "${each.value}/sys/plugins*"
     capabilities = ["read", "list"]
     description  = "Read/list plugins, if any"
   }
 
   rule {
-    path         = "+/sys/monitor"
+    path         = "${each.value}/sys/monitor"
     capabilities = ["read"]
     description  = "Stream Vault logs"
   }
 
   rule {
-    path         = "+/sys/managed-keys*"
+    path         = "${each.value}/sys/managed-keys*"
     capabilities = ["read", "list"]
     description  = "Read/list managed keys"
   }
 
   rule {
-    path         = "+/sys/locked-users*"
+    path         = "${each.value}/sys/locked-users*"
     capabilities = ["read", "list"]
     description  = "Read/list locked users"
   }
 }
 
+resource "vault_policy" "ns_admin" {
+  for_each = data.vault_policy_document.ns_admin
+  name     = "admin-${each.key}"
+  policy   = data.vault_policy_document.ns_admin[each.key].hcl
+}
+
+locals {
+  all_ns_admin_policies = [for p in vault_policy.ns_admin : p.name]
+}

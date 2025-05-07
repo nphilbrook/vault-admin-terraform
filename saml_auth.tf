@@ -43,7 +43,7 @@ resource "vault_saml_auth_backend_role" "break_glass" {
 resource "vault_identity_group" "regular_admin" {
   name     = "admin"
   type     = "external"
-  policies = [vault_policy.admin.name]
+  policies = concat([vault_policy.admin_admin.name], local.all_ns_admin_policies)
 }
 
 resource "vault_identity_group_alias" "regular_admin_alias" {

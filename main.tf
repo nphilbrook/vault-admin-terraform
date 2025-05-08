@@ -27,7 +27,7 @@ module "integrations" {
   auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
 }
 
-module "integrations" {
+module "digital_banking" {
   source              = "app.terraform.io/philbrook/bu-namespace/vault"
   version             = "1.2.1"
   name                = "Digital-Banking"

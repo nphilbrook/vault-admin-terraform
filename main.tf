@@ -16,6 +16,12 @@ locals {
     "Digital-Banking" = {
     }
   }
+  namespace_aws_keys = {
+    "Cloud-Operations" = {
+      initial_aws_access_key_id     = var.initial_aws_access_key_id
+      initial_aws_secret_access_key = var.initial_aws_access_key_id
+    }
+  }
 }
 
 module "bu_namespaces" {
@@ -23,11 +29,11 @@ module "bu_namespaces" {
   source                        = "app.terraform.io/philbrook/bu-namespace/vault"
   version                       = "1.2.1"
   name                          = each.key
-  configure_gha                 = try(each.value.configure_gha, null)
+  configure_gha                 = try(each.value.configure_gha, false)
   gha_org                       = try(each.value.gha_org, null)
-  configure_aws                 = try(each.value.configure_aws, null)
-  initial_aws_access_key_id     = each.value.configure_aws ? var.initial_aws_access_key_id : null
-  initial_aws_secret_access_key = each.value.configure_aws ? var.initial_aws_secret_access_key : null
+  configure_aws                 = try(each.value.configure_aws, false)
+  initial_aws_access_key_id     = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_access_key_id : null
+  initial_aws_secret_access_key = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_secret_access_key : null
   # Common to all
   auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
 }

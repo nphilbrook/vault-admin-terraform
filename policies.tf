@@ -181,12 +181,6 @@ data "vault_policy_document" "ns_admin" {
   }
 
   rule {
-    path         = "${each.value}/sys/version-history"
-    capabilities = ["read", "list"]
-    description  = "List version history"
-  }
-
-  rule {
     path         = "${each.value}/sys/plugins*"
     capabilities = ["read", "list"]
     description  = "Read/list plugins, if any"
@@ -208,6 +202,18 @@ data "vault_policy_document" "ns_admin" {
     path         = "${each.value}/sys/locked-users*"
     capabilities = ["read", "list"]
     description  = "Read/list locked users"
+  }
+
+  rule {
+    path         = "${each.value}/nonprod*"
+    capabilities = ["list"]
+    description  = "List things in nonprod"
+  }
+
+  rule {
+    path         = "${each.value}/prod*"
+    capabilities = ["list"]
+    description  = "List things in prod"
   }
 }
 

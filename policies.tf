@@ -111,107 +111,101 @@ resource "vault_policy" "admin_admin" {
   policy = data.vault_policy_document.admin_admin.hcl
 }
 
-data "vault_namespaces" "children" {}
-
-output "children" {
-  value = data.vault_namespaces.children.paths
-}
-
 data "vault_policy_document" "ns_admin" {
-  for_each = data.vault_namespaces.children.paths
+  for_each = module.bu_namespaces
   ### per namespace paths
   rule {
-    path         = "${each.value}/sys/policies/acl*"
+    path         = "${each.key}/sys/policies/acl*"
     capabilities = ["read", "list"]
     description  = "Read ACL policies"
   }
 
   rule {
-    path         = "${each.value}/auth*"
+    path         = "${each.key}/auth*"
     capabilities = ["read", "list"]
     description  = "Read/list auth methods broadly across Vault"
   }
 
   rule {
-    path         = "${each.value}/sys/auth*"
+    path         = "${each.key}/sys/auth*"
     capabilities = ["read", "list"]
     description  = "List auth methods"
   }
 
   rule {
-    path         = "${each.value}/identity*"
+    path         = "${each.key}/identity*"
     capabilities = ["read", "list"]
     description  = "Read identity objects"
   }
 
   rule {
-    path         = "${each.value}/sys/namespaces*"
+    path         = "${each.key}/sys/namespaces*"
     capabilities = ["read", "list"]
     description  = "Read/list namespaces"
   }
 
   rule {
-    path         = "${each.value}/sys/mounts*"
+    path         = "${each.key}/sys/mounts*"
     capabilities = ["read", "list"]
     description  = "Read/list secrets engines"
   }
 
   rule {
-    path         = "${each.value}/sys/config/ui"
+    path         = "${each.key}/sys/config/ui"
     capabilities = ["read", "list"]
     description  = "Configure Vault UI"
   }
 
   rule {
-    path         = "${each.value}/sys/leases*"
+    path         = "${each.key}/sys/leases*"
     capabilities = ["read", "list"]
     description  = "Read/list leases"
   }
 
   rule {
-    path         = "${each.value}/sys/health"
+    path         = "${each.key}/sys/health"
     capabilities = ["read"]
     description  = "Read health checks"
   }
 
   rule {
-    path         = "${each.value}/sys/quotas*"
+    path         = "${each.key}/sys/quotas*"
     capabilities = ["read", "list"]
     description  = "Read/list quotas"
   }
 
   rule {
-    path         = "${each.value}/sys/plugins*"
+    path         = "${each.key}/sys/plugins*"
     capabilities = ["read", "list"]
     description  = "Read/list plugins, if any"
   }
 
   rule {
-    path         = "${each.value}/sys/monitor"
+    path         = "${each.key}/sys/monitor"
     capabilities = ["read"]
     description  = "Stream Vault logs"
   }
 
   rule {
-    path         = "${each.value}/sys/managed-keys*"
+    path         = "${each.key}/sys/managed-keys*"
     capabilities = ["read", "list"]
     description  = "Read/list managed keys"
   }
 
   rule {
-    path         = "${each.value}/sys/locked-users*"
+    path         = "${each.key}/sys/locked-users*"
     capabilities = ["read", "list"]
     description  = "Read/list locked users"
   }
 
   rule {
-    path         = "${each.value}/nonprod*"
+    path         = "${each.key}/nonprod*"
     capabilities = ["list"]
     description  = "List things in nonprod"
   }
 
   rule {
-    path         = "${each.value}/prod*"
+    path         = "${each.key}/prod*"
     capabilities = ["list"]
     description  = "List things in prod"
   }

@@ -26,3 +26,10 @@ module "integrations" {
   gha_org             = "nphilbrook"
   auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
 }
+
+module "integrations" {
+  source              = "app.terraform.io/philbrook/bu-namespace/vault"
+  version             = "1.2.1"
+  name                = "Digital-Banking"
+  auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
+}

@@ -145,7 +145,7 @@ data "vault_policy_document" "ns_admin" {
   }
 
   rule {
-    path         = "${each.value}/sys/namespaces/*"
+    path         = "${each.value}/sys/namespaces*"
     capabilities = ["read", "list"]
     description  = "Read/list namespaces"
   }

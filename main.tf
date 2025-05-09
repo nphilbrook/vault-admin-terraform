@@ -19,7 +19,7 @@ locals {
   namespace_aws_keys = {
     "Cloud-Operations" = {
       initial_aws_access_key_id     = var.initial_aws_access_key_id
-      initial_aws_secret_access_key = var.initial_aws_access_key_id
+      initial_aws_secret_access_key = var.initial_aws_secret_access_key
     }
   }
 }

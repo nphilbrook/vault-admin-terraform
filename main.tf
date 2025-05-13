@@ -36,8 +36,8 @@ module "bu_namespaces" {
   configure_aws                 = try(each.value.configure_aws, false)
   initial_aws_access_key_id     = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_access_key_id : null
   initial_aws_secret_access_key = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_secret_access_key : null
-  kv_group_prod_name            = try(ecah.value.kv_group_prod_name, null)
-  kv_group_nonprod_name         = try(ecah.value.kv_group_nonprod_name, null)
+  kv_group_prod_name            = try(each.value.kv_group_prod_name, null)
+  kv_group_nonprod_name         = try(each.value.kv_group_nonprod_name, null)
   # Common to all
   auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
 }

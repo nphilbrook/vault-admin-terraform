@@ -9,7 +9,7 @@ locals {
     "AppDev" = {
       configure_gha         = true
       gha_org               = "nphilbrook"
-      kv_group_nonprod_name = "38260e06-2511-4def-91c2-e37327677264"
+      kv_group_nonprod_name = "bd093061-2de9-445b-bd6c-fac871aead0b"
     },
     "Integrations" = {
       configure_gha = true

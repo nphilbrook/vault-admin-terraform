@@ -29,7 +29,7 @@ locals {
 module "bu_namespaces" {
   for_each                      = local.namespace_configs
   source                        = "app.terraform.io/philbrook/bu-namespace/vault"
-  version                       = "1.4.1"
+  version                       = "1.4.2"
   name                          = each.key
   configure_gha                 = try(each.value.configure_gha, false)
   gha_org                       = try(each.value.gha_org, null)

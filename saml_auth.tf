@@ -15,11 +15,6 @@ data "vault_auth_backend" "saml_mount" {
   path = "saml"
 }
 
-# A different way to do this (Better?)
-data "vault_auth_backend" "saml_mount" {
-  path = "saml"
-}
-
 resource "vault_saml_auth_backend_role" "default" {
   path             = vault_saml_auth_backend.saml.path
   name             = "default"

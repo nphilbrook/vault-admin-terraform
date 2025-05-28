@@ -53,6 +53,6 @@ resource "vault_identity_group" "regular_admin" {
 
 resource "vault_identity_group_alias" "regular_admin_alias" {
   name           = "vault-admin"
-  mount_accessor = data.vault_auth_backend.saml_mount.data.accessor
+  mount_accessor = data.vault_auth_backend.saml_mount.accessor
   canonical_id   = vault_identity_group.regular_admin.id
 }

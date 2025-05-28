@@ -11,11 +11,6 @@ resource "vault_saml_auth_backend" "saml" {
 # The mount accessor is not exported as an attribute on the above resource,
 # but we can fetch it.
 # It's frustrating that we have to do this
-data "vault_generic_secret" "saml_mount" {
-  path = "sys/auth/${vault_saml_auth_backend.saml.path}"
-}
-
-# A different way to do this (Better?)
 data "vault_auth_backend" "saml_mount" {
   path = "saml"
 }

@@ -29,8 +29,8 @@ locals {
 module "bu_namespaces" {
   for_each = local.namespace_configs
   source   = "app.terraform.io/philbrook/bu-namespace/vault"
-  version  = "1.4.3"
-  # source   = "git@github.com:nphilbrook/terraform-vault-bu-namespace.git?ref=nphilbrook_aws_spelunk"
+  version  = "1.5.0"
+  # source = "git@github.com:nphilbrook/terraform-vault-bu-namespace.git?ref=nphilbrook_remove_keys"
   # source                        = "/home/nphilbrook/repos/bankunited/terraform-vault-bu-namespace"
   name                          = each.key
   configure_gha                 = try(each.value.configure_gha, false)
@@ -41,7 +41,7 @@ module "bu_namespaces" {
   kv_group_prod_name            = try(each.value.kv_group_prod_name, null)
   kv_group_nonprod_name         = try(each.value.kv_group_nonprod_name, null)
   # Common to all
-  auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
+  auth_mount_accessor = data.vault_auth_backend.saml_mount.accessor
 }
 
 # module "cloud_operations" {

@@ -41,7 +41,7 @@ module "bu_namespaces" {
   kv_group_prod_name            = try(each.value.kv_group_prod_name, null)
   kv_group_nonprod_name         = try(each.value.kv_group_nonprod_name, null)
   # Common to all
-  auth_mount_accessor = data.vault_generic_secret.saml_mount.data.accessor
+  auth_mount_accessor = data.vault_auth_backend.saml_mount.data.accessor
 }
 
 # module "cloud_operations" {

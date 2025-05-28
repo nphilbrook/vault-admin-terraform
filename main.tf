@@ -28,9 +28,9 @@ locals {
 
 module "bu_namespaces" {
   for_each = local.namespace_configs
-  source   = "app.terraform.io/philbrook/bu-namespace/vault"
-  version  = "1.4.3"
-  # source   = "git@github.com:nphilbrook/terraform-vault-bu-namespace.git?ref=nphilbrook_aws_spelunk"
+  # source   = "app.terraform.io/philbrook/bu-namespace/vault"
+  # version  = "1.4.3"
+  source = "git@github.com:nphilbrook/terraform-vault-bu-namespace.git?ref=nphilbrook_remove_keys"
   # source                        = "/home/nphilbrook/repos/bankunited/terraform-vault-bu-namespace"
   name                          = each.key
   configure_gha                 = try(each.value.configure_gha, false)

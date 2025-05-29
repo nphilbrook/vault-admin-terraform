@@ -7,14 +7,14 @@ locals {
       kv_group_prod_name = "38260e06-2511-4def-91c2-e37327677264"
     },
     "AppDev" = {
-      configure_gha         = true
-      gha_org               = "nphilbrook"
+      # configure_gha         = true
+      # gha_org               = "nphilbrook"
       kv_group_nonprod_name = "bd093061-2de9-445b-bd6c-fac871aead0b"
       kv_group_prod_name    = "a63d1663-8cfd-4007-bcc6-74b77a21586b"
     },
     "Integrations" = {
-      configure_gha = true
-      gha_org       = "nphilbrook"
+      # configure_gha = true
+      # gha_org       = "nphilbrook"
     },
     "Digital-Banking" = {
     }
@@ -30,12 +30,12 @@ locals {
 module "bu_namespaces" {
   for_each = local.namespace_configs
   source   = "app.terraform.io/philbrook/bu-namespace/vault"
-  version  = "1.5.0"
-  # source = "git@github.com:nphilbrook/terraform-vault-bu-namespace.git?ref=nphilbrook_remove_keys"
+  version  = "2.0.0"
+  # source = "git@github.com:nphilbrook/terraform-vault-bu-namespace.git?ref=main"
   # source                        = "/home/nphilbrook/repos/bankunited/terraform-vault-bu-namespace"
-  name                          = each.key
-  configure_gha                 = try(each.value.configure_gha, false)
-  gha_org                       = try(each.value.gha_org, null)
+  name = each.key
+  # configure_gha                 = try(each.value.configure_gha, false)
+  # gha_org                       = try(each.value.gha_org, null)
   configure_aws                 = try(each.value.configure_aws, false)
   initial_aws_access_key_id     = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_access_key_id : null
   initial_aws_secret_access_key = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_secret_access_key : null

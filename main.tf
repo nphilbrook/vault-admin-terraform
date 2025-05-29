@@ -10,6 +10,7 @@ locals {
       configure_gha         = true
       gha_org               = "nphilbrook"
       kv_group_nonprod_name = "bd093061-2de9-445b-bd6c-fac871aead0b"
+      kv_group_prod_name    = "a63d1663-8cfd-4007-bcc6-74b77a21586b"
     },
     "Integrations" = {
       configure_gha = true

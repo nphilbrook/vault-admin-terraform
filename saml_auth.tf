@@ -29,7 +29,7 @@ resource "vault_saml_auth_backend_role" "break_glass" {
   path             = vault_saml_auth_backend.saml.path
   name             = "break-glass"
   token_policies   = [vault_policy.break_glass.name]
-  groups_attribute = null
+  groups_attribute = ""
   bound_attributes = {
     "http://schemas.auth0.com/vault-super-admin" = "true"
   }

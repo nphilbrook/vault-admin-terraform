@@ -15,7 +15,6 @@ locals {
     "Integrations" = {
       # configure_gha = true
       # gha_org       = "nphilbrook"
-      kv_group_prod_name = "a63d1663-8cfd-4007-bcc6-74b77a21586b"
     },
     "Digital-Banking" = {
     }

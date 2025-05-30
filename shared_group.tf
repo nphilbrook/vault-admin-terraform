@@ -1,5 +1,5 @@
 locals {
-  all_kv_policies = [for ns, v in module.bu_namespaces : "${ns}-kv_prod"]
+  all_kv_policies = [for ns, v in module.bu_namespaces : "${ns}-kv-prod"]
 }
 
 resource "vault_identity_group" "kv_prod_shared" {

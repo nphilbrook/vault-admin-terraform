@@ -18,13 +18,18 @@ resource "vault_aws_secret_backend" "aws" {
   }
 }
 
+locals {
+  aws_account_ids = [
+    "517068637116",
+  ]
+}
+
 resource "vault_aws_secret_backend_role" "vault_aws_role" {
   namespace       = module.bu_namespaces["Cloud-Operations"].path
   backend         = vault_aws_secret_backend.aws.path
   name            = "aws-dynamic"
   credential_type = "assumed_role"
-  # role_arns       = ["arn:aws:iam::517068637116:role/dyn-ec2-access", "arn:aws:iam::517068637116:role/s3-full-access"]
-  role_arns = ["arn:aws:iam::*:role/s3-full-access"]
+  role_arns       = [for account in local.aws_account_ids : "arn:aws:iam::${account}:role/s3-full-access"]
 }
 
 resource "vault_jwt_auth_backend_role" "vault_jwt_aws_role" {

@@ -92,7 +92,7 @@ data "aws_iam_role" "vault_target_iam_role" {
 }
 
 resource "aws_iam_user" "vault_mount_user" {
-  name                 = "vault-root-${replace(module.bu_namespaces["Cloud-Operations"].path, "/", "-")}"
+  name                 = "vault-root-${replace(module.bu_namespaces["Cloud-Operations"].id, "/", "-")}"
   permissions_boundary = data.aws_iam_policy.demo_user_permissions_boundary.arn
   force_destroy        = true
 }
@@ -122,7 +122,7 @@ data "aws_iam_policy_document" "vault_mount_user_policy" {
 }
 
 resource "aws_iam_policy" "vault_mount_user_policy" {
-  name   = "vault-mount-user-${replace(module.bu_namespaces["Cloud-Operations"].path, "/", "-")}"
+  name   = "vault-mount-user-${replace(module.bu_namespaces["Cloud-Operations"].id, "/", "-")}"
   policy = data.aws_iam_policy_document.vault_mount_user_policy.json
 }
 

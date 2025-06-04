@@ -30,7 +30,7 @@ locals {
 module "bu_namespaces" {
   for_each = local.namespace_configs
   source   = "app.terraform.io/philbrook/bu-namespace/vault"
-  version  = "3.0.0"
+  version  = "3.0.1"
   # source = "git@github.com:nphilbrook/terraform-vault-bu-namespace.git?ref=main"
   # source                        = "/home/nphilbrook/repos/bankunited/terraform-vault-bu-namespace"
   name = each.key

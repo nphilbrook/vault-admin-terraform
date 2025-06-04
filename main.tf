@@ -3,7 +3,7 @@ locals {
   # including policies for admin to view all namespaces
   namespace_configs = {
     "Cloud-Operations" = {
-      configure_aws      = true
+      # configure_aws      = true
       kv_group_prod_name = "38260e06-2511-4def-91c2-e37327677264"
     },
     "AppDev" = {
@@ -21,8 +21,8 @@ locals {
   }
   namespace_aws_keys = {
     "Cloud-Operations" = {
-      initial_aws_access_key_id     = var.initial_aws_access_key_id
-      initial_aws_secret_access_key = var.initial_aws_secret_access_key
+      # initial_aws_access_key_id     = var.initial_aws_access_key_id
+      # initial_aws_secret_access_key = var.initial_aws_secret_access_key
     }
   }
 }
@@ -30,17 +30,17 @@ locals {
 module "bu_namespaces" {
   for_each = local.namespace_configs
   source   = "app.terraform.io/philbrook/bu-namespace/vault"
-  version  = "2.0.1"
+  version  = "3.0.0"
   # source = "git@github.com:nphilbrook/terraform-vault-bu-namespace.git?ref=main"
   # source                        = "/home/nphilbrook/repos/bankunited/terraform-vault-bu-namespace"
   name = each.key
   # configure_gha                 = try(each.value.configure_gha, false)
   # gha_org                       = try(each.value.gha_org, null)
-  configure_aws                 = try(each.value.configure_aws, false)
-  initial_aws_access_key_id     = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_access_key_id : null
-  initial_aws_secret_access_key = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_secret_access_key : null
-  kv_group_prod_name            = try(each.value.kv_group_prod_name, null)
-  kv_group_nonprod_name         = try(each.value.kv_group_nonprod_name, null)
+  # configure_aws                 = try(each.value.configure_aws, false)
+  # initial_aws_access_key_id     = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_access_key_id : null
+  # initial_aws_secret_access_key = try(each.value.configure_aws, false) ? local.namespace_aws_keys[each.key].initial_aws_secret_access_key : null
+  kv_group_prod_name    = try(each.value.kv_group_prod_name, null)
+  kv_group_nonprod_name = try(each.value.kv_group_nonprod_name, null)
   # Common to all
   auth_mount_accessor = data.vault_auth_backend.saml_mount.accessor
 }

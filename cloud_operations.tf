@@ -95,12 +95,6 @@ resource "aws_iam_user" "vault_mount_user" {
   name                 = "vault-root-${replace(module.bu_namespaces["Cloud-Operations"].id, "/", "-")}"
   permissions_boundary = data.aws_iam_policy.demo_user_permissions_boundary.arn
   force_destroy        = true
-
-  lifecycle {
-    ignore_changes = [
-      tags
-    ]
-  }
 }
 
 data "aws_iam_policy_document" "vault_mount_user_policy" {

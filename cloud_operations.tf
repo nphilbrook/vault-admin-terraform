@@ -38,7 +38,7 @@ resource "vault_jwt_auth_backend_role" "vault_jwt_aws_role" {
   backend        = vault_jwt_auth_backend.jwt_hcp_tf_aws.path
   role_name      = "aws-dynamic"
   token_policies = ["default", vault_policy.aws_policy.name]
-  token_num_uses = 1
+  # token_num_uses = 1
 
   bound_audiences = ["vault.workload.identity"]
   bound_claims = {

@@ -1,9 +1,10 @@
 resource "vault_jwt_auth_backend" "jwt_hcp_tf_aws" {
-  namespace                                                                                              = module.bu_namespaces["Cloud-Operations"].path
-  /*   description        = "JWT auth backend for HCP Terraform to provision dynamic AWS creds"
- */ path = "jwt"
-  oidc_discovery_url                                                                                     = "https://app.terraform.io"
-  bound_issuer                                                                                           = "https://app.terraform.io"
+  namespace          = module.bu_namespaces["Cloud-Operations"].path
+  description        = "JWT auth backend for HCP Terraform to provision dynamic AWS creds"
+  path               = "jwt"
+  oidc_discovery_url = "https://app.terraform.io"
+  bound_issuer       = "https://app.terraform.io"
+  local              = true
 }
 
 resource "vault_aws_secret_backend" "aws" {

@@ -4,7 +4,6 @@ resource "vault_jwt_auth_backend" "jwt_hcp_tf_aws" {
   path               = "jwt"
   oidc_discovery_url = "https://app.terraform.io"
   bound_issuer       = "https://app.terraform.io"
-  local              = true
 }
 
 resource "vault_aws_secret_backend" "aws" {
@@ -31,6 +30,7 @@ resource "vault_aws_secret_backend_role" "vault_aws_role" {
   name            = "aws-dynamic"
   credential_type = "assumed_role"
   role_arns       = [for account in local.aws_account_ids : "arn:aws:iam::${account}:role/s3-full-access"]
+  default_sts_ttl = "1h"
 }
 
 resource "vault_jwt_auth_backend_role" "vault_jwt_aws_role" {

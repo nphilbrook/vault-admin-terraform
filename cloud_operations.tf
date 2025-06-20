@@ -41,7 +41,10 @@ resource "vault_jwt_auth_backend_role" "vault_jwt_aws_role" {
 
   bound_audiences = ["vault.workload.identity"]
   bound_claims = {
-    sub = "organization:philbrook:project:SB Vault Lab:workspace:aws-probable-pancake:run_phase:*,organization:philbrook:project:SB Vault Lab:workspace:aws-delightful-otter:run_phase:*"
+    sub = join(",", [
+      "organization:philbrook:project:SB Vault Lab:workspace:aws-probable-pancake:run_phase:*",
+      "organization:philbrook:project:SB Vault Lab:workspace:aws-delightful-otter:run_phase:*"
+    ])
   }
   bound_claims_type = "glob"
   user_claim        = "terraform_project_id"

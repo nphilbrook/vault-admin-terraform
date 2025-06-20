@@ -30,6 +30,7 @@ resource "vault_aws_secret_backend_role" "vault_aws_role" {
   name            = "aws-dynamic"
   credential_type = "assumed_role"
   role_arns       = [for account in local.aws_account_ids : "arn:aws:iam::${account}:role/s3-full-access"]
+  # default_sts_ttl = 60
 }
 
 resource "vault_jwt_auth_backend_role" "vault_jwt_aws_role" {
@@ -40,7 +41,7 @@ resource "vault_jwt_auth_backend_role" "vault_jwt_aws_role" {
 
   bound_audiences = ["vault.workload.identity"]
   bound_claims = {
-    sub = "organization:philbrook:project:SB Vault Lab:workspace:aws-probable-pancake:run_phase:*"
+    sub = "organization:philbrook:project:SB Vault Lab:workspace:aws-probable-pancake:run_phase:*,organization:philbrook:project:SB Vault Lab:workspace:aws-delightful-otter:run_phase:*"
   }
   bound_claims_type = "glob"
   user_claim        = "terraform_project_id"

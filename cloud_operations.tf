@@ -20,15 +20,16 @@ resource "vault_aws_secret_backend" "aws" {
 
 module "aws_roles" {
   source          = "app.terraform.io/philbrook/aws-engine-roles/vault"
-  version         = "1.0.0"
+  version         = "1.0.1"
   tf_organization = "philbrook"
-  /*   tf_workspaces = [
+  tf_workspaces = [
     "aws-probable-pancake",
     "aws-delightful-otter"
   ]
- */ tf_projects = [
+  /*  tf_projects = [
     "SB Vault Lab"
   ]
+ */
   aws_iam_role_name    = "s3-full-access"
   aws_account_id       = "517068637116"
   vault_namespace_path = module.bu_namespaces["Cloud-Operations"].path

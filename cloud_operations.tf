@@ -22,9 +22,12 @@ module "aws_roles" {
   source          = "app.terraform.io/philbrook/aws-engine-roles/vault"
   version         = "1.0.0"
   tf_organization = "philbrook"
-  tf_workspaces = [
+  /*   tf_workspaces = [
     "aws-probable-pancake",
     "aws-delightful-otter"
+  ]
+ */ tf_projects = [
+    "SB Vault Lab"
   ]
   aws_iam_role_name    = "s3-full-access"
   aws_account_id       = "517068637116"

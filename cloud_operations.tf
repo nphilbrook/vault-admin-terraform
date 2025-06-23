@@ -1,17 +1,3 @@
-module "aws_roles" {
-  source          = "app.terraform.io/philbrook/aws-engine-roles/vault"
-  version         = "1.0.0"
-  tf_organization = "philbrook"
-  tf_workspaces = [
-    "aws-probable-pancake",
-    "aws-delightful-otter"
-  ]
-  aws_iam_role_name    = "s3-full-access"
-  aws_account_id       = "517068637116"
-  vault_namespace_path = module.bu_namespaces["Cloud-Operations"].path
-}
-
-
 resource "vault_jwt_auth_backend" "jwt_hcp_tf_aws" {
   namespace          = module.bu_namespaces["Cloud-Operations"].path
   description        = "JWT auth backend for HCP Terraform to provision dynamic AWS creds"
@@ -32,27 +18,26 @@ resource "vault_aws_secret_backend" "aws" {
   }
 }
 
-locals {
-  aws_account_ids = [
-    "517068637116",
+module "aws_roles" {
+  source          = "app.terraform.io/philbrook/aws-engine-roles/vault"
+  version         = "1.0.0"
+  tf_organization = "philbrook"
+  tf_workspaces = [
+    "aws-probable-pancake",
+    "aws-delightful-otter"
   ]
+  aws_iam_role_name    = "s3-full-access"
+  aws_account_id       = "517068637116"
+  vault_namespace_path = module.bu_namespaces["Cloud-Operations"].path
 }
 
-resource "vault_aws_secret_backend_role" "vault_aws_role" {
-  namespace       = module.bu_namespaces["Cloud-Operations"].path
-  backend         = vault_aws_secret_backend.aws.path
-  name            = "aws-dynamic"
-  credential_type = "assumed_role"
-  role_arns       = [for account in local.aws_account_ids : "arn:aws:iam::${account}:role/s3-full-access"]
-  # default_sts_ttl = 60
-  # default_sts_ttl = 60
-}
+# DOORMAT SHIT
 
 resource "vault_jwt_auth_backend_role" "vault_jwt_aws_role" {
   namespace      = module.bu_namespaces["Cloud-Operations"].path
   backend        = vault_jwt_auth_backend.jwt_hcp_tf_aws.path
-  role_name      = "aws-dynamic"
-  token_policies = ["default", vault_policy.aws_policy.name]
+  role_name      = "aws-doormat"
+  token_policies = ["default", vault_policy.aws_policy_doormat.name]
 
   bound_audiences = ["vault.workload.identity"]
   bound_claims = {
@@ -66,41 +51,26 @@ resource "vault_jwt_auth_backend_role" "vault_jwt_aws_role" {
   role_type         = "jwt"
 }
 
-resource "vault_policy" "aws_policy" {
+resource "vault_policy" "aws_policy_doormat" {
   namespace = module.bu_namespaces["Cloud-Operations"].path
-  name      = "aws-dynamic"
+  name      = "aws-doormat"
   # ref below
-  policy = data.vault_policy_document.aws_policy.hcl
+  policy = data.vault_policy_document.aws_policy_doormat.hcl
 }
 
-data "vault_policy_document" "aws_policy" {
+data "vault_policy_document" "aws_policy_doormat" {
   rule {
-    path         = "aws/creds/${vault_aws_secret_backend_role.vault_aws_role.name}"
+    path         = "aws-doormat/creds/${vault_aws_secret_backend_role.vault_aws_role_doormat.name}"
     capabilities = ["read"]
     description  = "Read dynamic AWS credentials for the specified role"
   }
 
   rule {
-    path         = "aws/sts/${vault_aws_secret_backend_role.vault_aws_role.name}"
-    capabilities = ["read", "update", "create"]
-    description  = "Read dynamic AWS credentials for the specified role with the STS path."
-  }
-
-  rule {
-    path         = "aws-doormat/creds/${vault_aws_secret_backend_role.vault_aws_role.name}"
-    capabilities = ["read"]
-    description  = "Read dynamic AWS credentials for the specified role"
-  }
-
-  rule {
-    path         = "aws-doormat/sts/${vault_aws_secret_backend_role.vault_aws_role.name}"
+    path         = "aws-doormat/sts/${vault_aws_secret_backend_role.vault_aws_role_doormat.name}"
     capabilities = ["read", "update", "create"]
     description  = "Read dynamic AWS credentials for the specified role with the STS path."
   }
 }
-
-
-# DOORMAT SHIT
 
 data "aws_iam_policy" "demo_user_permissions_boundary" {
   name = "DemoUser"
@@ -170,7 +140,7 @@ resource "vault_aws_secret_backend" "aws_doormat" {
 resource "vault_aws_secret_backend_role" "vault_aws_role_doormat" {
   namespace       = module.bu_namespaces["Cloud-Operations"].path
   backend         = vault_aws_secret_backend.aws_doormat.path
-  name            = "aws-dynamic"
+  name            = "aws-doormat"
   credential_type = "assumed_role"
   role_arns       = [data.aws_iam_role.vault_target_iam_role.arn]
 }

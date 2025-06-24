@@ -6,11 +6,23 @@ resource "vault_jwt_auth_backend" "int_jwt_gha" {
   bound_issuer       = "https://token.actions.githubusercontent.com"
 }
 
-module "gha_oidc_access" {
+module "gha_jwt_worklfow" {
   source               = "app.terraform.io/philbrook/gha-access/vault"
-  version              = "1.0.1"
+  version              = "1.0.2"
   vault_namespace_path = module.bu_namespaces["Integrations"].path
   jwt_backend_path     = vault_jwt_auth_backend.int_jwt_gha.path
+  role_name            = "gha-workflow"
   github_organization  = "nphilbrook"
   github_repositories  = ["*"]
+}
+
+module "gha_jwt_workflow_2" {
+  source               = "app.terraform.io/philbrook/gha-access/vault"
+  version              = "1.0.2"
+  vault_namespace_path = module.bu_namespaces["Integrations"].path
+  jwt_backend_path     = vault_jwt_auth_backend.int_jwt_gha.path
+  role_name            = "gha-test-addditional"
+  github_organization  = "nphilbrook"
+  github_repositories  = ["lambda-fib-code"]
+  workflow             = "retrieve-vault"
 }

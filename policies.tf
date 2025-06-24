@@ -209,6 +209,12 @@ data "vault_policy_document" "ns_admin" {
     capabilities = ["list"]
     description  = "List things in prod"
   }
+
+  rule {
+    path         = "${each.key}/aws/config/rotate-root"
+    capabilities = ["update"]
+    description  = "Allow rotation of AWS root credentials"
+  }
 }
 
 resource "vault_policy" "ns_admin" {

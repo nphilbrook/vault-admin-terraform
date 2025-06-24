@@ -215,6 +215,12 @@ data "vault_policy_document" "ns_admin" {
     capabilities = ["update"]
     description  = "Allow rotation of AWS root credentials"
   }
+
+  rule {
+    path         = "${each.key}/sys/capabilities-self"
+    capabilities = ["update"]
+    description  = "Read capabilities of the token on this path in sub-namespaces. Default policy only grants this on the token namespace"
+  }
 }
 
 resource "vault_policy" "ns_admin" {

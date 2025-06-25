@@ -18,6 +18,51 @@ resource "vault_aws_secret_backend" "aws" {
   }
 }
 
+# A role for the TFC-Workspace-Admin workspace 
+resource "vault_jwt_auth_backend_role" "tfc_workspace_admin_role" {
+  namespace = module.bu_namespaces["Cloud-Operations"].path
+  backend   = vault_jwt_auth_backend.jwt_hcp_tf_aws.path
+  role_name = "tfc-workspace-admin"
+
+  token_policies = [
+    vault_policy.tfc_workspace_admin_policy.name
+  ]
+
+  bound_audiences = ["vault.workload.identity"]
+  bound_claims = {
+    sub = "organization:philbrook:project:*:workspace:hcp-tf-control:run_phase:*"
+  }
+
+  bound_claims_type = "glob"
+  user_claim        = "terraform_workspace_id"
+  role_type         = "jwt"
+}
+
+resource "vault_policy" "tfc_workspace_admin_policy" {
+  namespace = module.bu_namespaces["Cloud-Operations"].path
+  name      = "tfc-workspace-admin"
+  policy    = data.vault_policy_document.tfc_workspace_admin_policy.hcl
+}
+
+data "vault_policy_document" "tfc_workspace_admin_policy" {
+  rule {
+    path         = "auth/jwt/role*"
+    capabilities = ["create", "read", "update", "patch", "list", "delete"]
+    description  = "manage JWT roles in the Cloud-Operations namespace for TFC workspaces"
+  }
+
+  rule {
+    path         = "sys/policies/acl*"
+    capabilities = ["create", "read", "update", "patch", "list", "delete"]
+    description  = "manage policies in the Cloud-Operations namespace for TFC workspaces"
+  }
+  rule {
+    path         = "aws/roles*"
+    capabilities = ["create", "read", "update", "patch", "list", "delete"]
+    description  = "manage AWS roles in the Cloud-Operations namespace for TFC workspaces"
+  }
+}
+
 module "aws_roles" {
   source          = "app.terraform.io/philbrook/aws-engine-roles/vault"
   version         = "1.0.1"
@@ -26,126 +71,8 @@ module "aws_roles" {
     "aws-probable-pancake",
     "aws-delightful-otter"
   ]
-  /*  tf_projects = [
-    "SB Vault Lab"
-  ]
- */
   aws_iam_role_name    = "s3-full-access"
   aws_account_id       = "517068637116"
   vault_namespace_path = module.bu_namespaces["Cloud-Operations"].path
 }
 
-# DOORMAT SHIT
-
-resource "vault_jwt_auth_backend_role" "vault_jwt_aws_role" {
-  namespace      = module.bu_namespaces["Cloud-Operations"].path
-  backend        = vault_jwt_auth_backend.jwt_hcp_tf_aws.path
-  role_name      = "aws-doormat"
-  token_policies = ["default", vault_policy.aws_policy_doormat.name]
-
-  bound_audiences = ["vault.workload.identity"]
-  bound_claims = {
-    sub = join(",", [
-      "organization:philbrook:project:SB Vault Lab:workspace:aws-probable-pancake:run_phase:*",
-      "organization:philbrook:project:SB Vault Lab:workspace:aws-delightful-otter:run_phase:*"
-    ])
-  }
-  bound_claims_type = "glob"
-  user_claim        = "terraform_project_id"
-  role_type         = "jwt"
-}
-
-resource "vault_policy" "aws_policy_doormat" {
-  namespace = module.bu_namespaces["Cloud-Operations"].path
-  name      = "aws-doormat"
-  # ref below
-  policy = data.vault_policy_document.aws_policy_doormat.hcl
-}
-
-data "vault_policy_document" "aws_policy_doormat" {
-  rule {
-    path         = "aws-doormat/creds/${vault_aws_secret_backend_role.vault_aws_role_doormat.name}"
-    capabilities = ["read"]
-    description  = "Read dynamic AWS credentials for the specified role"
-  }
-
-  rule {
-    path         = "aws-doormat/sts/${vault_aws_secret_backend_role.vault_aws_role_doormat.name}"
-    capabilities = ["read", "update", "create"]
-    description  = "Read dynamic AWS credentials for the specified role with the STS path."
-  }
-}
-
-data "aws_iam_policy" "demo_user_permissions_boundary" {
-  name = "DemoUser"
-}
-
-data "aws_iam_role" "vault_target_iam_role" {
-  name = "vault-assumed-role-credentials-demo"
-}
-
-resource "aws_iam_user" "vault_mount_user" {
-  name                 = "vault-root-${replace(module.bu_namespaces["Cloud-Operations"].id, "/", "-")}"
-  permissions_boundary = data.aws_iam_policy.demo_user_permissions_boundary.arn
-  force_destroy        = true
-}
-
-data "aws_iam_policy_document" "vault_mount_user_policy" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole"
-    ]
-    resources = [
-      data.aws_iam_role.vault_target_iam_role.arn
-    ]
-  }
-  statement {
-    effect = "Allow"
-    actions = [
-      "iam:GetUser",
-      "iam:CreateAccessKey",
-      "iam:DeleteAccessKey",
-      "iam:ListAccessKeys"
-    ]
-    resources = [
-      aws_iam_user.vault_mount_user.arn
-    ]
-  }
-}
-
-resource "aws_iam_policy" "vault_mount_user_policy" {
-  name   = "vault-mount-user-${replace(module.bu_namespaces["Cloud-Operations"].id, "/", "-")}"
-  policy = data.aws_iam_policy_document.vault_mount_user_policy.json
-}
-
-resource "aws_iam_user_policy_attachment" "vault_mount_user" {
-  user       = aws_iam_user.vault_mount_user.name
-  policy_arn = aws_iam_policy.vault_mount_user_policy.arn
-}
-
-# Create an access key manually here
-
-resource "vault_aws_secret_backend" "aws_doormat" {
-  path      = "aws-doormat"
-  namespace = module.bu_namespaces["Cloud-Operations"].path
-  # This code will no longer work for net-new invocations of this module, but I'm
-  # ripping all of this stuff out anyway :shrug:
-  access_key = "foo"
-  secret_key = "bar"
-  lifecycle {
-    ignore_changes = [
-      access_key,
-      secret_key
-    ]
-  }
-}
-
-resource "vault_aws_secret_backend_role" "vault_aws_role_doormat" {
-  namespace       = module.bu_namespaces["Cloud-Operations"].path
-  backend         = vault_aws_secret_backend.aws_doormat.path
-  name            = "aws-doormat"
-  credential_type = "assumed_role"
-  role_arns       = [data.aws_iam_role.vault_target_iam_role.arn]
-}
-# END DOORMAT SHIT

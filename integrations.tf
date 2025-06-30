@@ -15,8 +15,8 @@ module "gha_jwt_worklfow" {
   role_name            = "gha-workflow"
   github_organization  = "nphilbrook"
   github_repositories  = ["*"]
-  write_paths          = ["nonprod/kv/*"]
-  read_paths           = ["prod/kv/*"]
+  read_paths           = ["prod/kv/*", "nonprod/kv/*"]
+  write_paths          = ["prod/kv/*", "nonprod/kv/*"]
 }
 
 module "gha_jwt_workflow_2" {

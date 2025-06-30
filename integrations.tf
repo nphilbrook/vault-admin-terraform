@@ -28,5 +28,6 @@ module "gha_jwt_workflow_2" {
   role_name            = "gha-test-addditional"
   github_organization  = "nphilbrook"
   github_repositories  = ["lambda-fib-code"]
-  workflow             = "retrieve-vault"
+  workflow             = "retrieve-vault-2"
+  read_paths           = ["prod/kv/data/foo"]
 }

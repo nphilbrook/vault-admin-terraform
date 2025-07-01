@@ -13,7 +13,7 @@ module "gha_jwt_worklfow" {
   vault_namespace_path = module.bu_namespaces["Integrations"].path
   jwt_backend_path     = vault_jwt_auth_backend.int_jwt_gha.path
   role_name            = "gha-workflow"
-  github_organization  = "nphilbrook"
+  github_organization  = "Nphilbrook"
   github_repositories  = ["*"]
   read_paths           = ["prod/kv/*", "nonprod/kv/*"]
   write_paths          = ["prod/kv/*", "nonprod/kv/*"]

@@ -14,10 +14,6 @@ locals {
     "Digital-Banking" = {
     }
   }
-  namespace_aws_keys = {
-    "Cloud-Operations" = {
-    }
-  }
 }
 
 module "bu_namespaces" {

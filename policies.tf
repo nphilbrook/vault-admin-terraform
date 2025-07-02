@@ -13,7 +13,7 @@ resource "vault_policy" "break_glass" {
 
 # These policies exist to facilitate visibility into all parts of the system for admins
 # It is intentionally read-only so that write ops go through Terraform code
-# It includes this namespace and one level of child namespaces via the below policy documents
+# It includes this namespace (top-level)
 data "vault_policy_document" "admin_admin" {
   rule {
     path         = "sys/policies/acl*"
@@ -111,7 +111,7 @@ resource "vault_policy" "admin_admin" {
   policy = data.vault_policy_document.admin_admin.hcl
 }
 
-data "vault_policy_document" "ns_admin" {
+/* data "vault_policy_document" "ns_admin" {
   for_each = module.bu_namespaces
   ### per namespace paths
   rule {
@@ -242,7 +242,4 @@ resource "vault_policy" "ns_admin" {
   name     = "admin-${each.key}"
   policy   = data.vault_policy_document.ns_admin[each.key].hcl
 }
-
-locals {
-  all_ns_admin_policies = [for p in vault_policy.ns_admin : p.name]
-}
+ */

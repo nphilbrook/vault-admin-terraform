@@ -38,6 +38,12 @@ resource "vault_saml_auth_backend_role" "break_glass" {
   token_ttl = 129600
 }
 
+# This pulls in the namespace admin policy for all of the BU namespaces, so that
+# cluster admins have visibility into all child namespaces (read-only, list secrets only)
+locals {
+  all_ns_admin_policies = [for bu in module.bu_namespaces : bu.namespace_admin_policy_name]
+}
+
 # External group for regular admins
 resource "vault_identity_group" "regular_admin" {
   name     = "admin"

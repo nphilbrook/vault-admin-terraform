@@ -9,7 +9,7 @@ resource "vault_jwt_auth_backend" "int_jwt_gha" {
 module "gha_jwt_worklfow" {
   #source               = "../terraform-vault-gha-access"
   source               = "app.terraform.io/philbrook/gha-access/vault"
-  version              = "1.1.1"
+  version              = "1.1.2"
   vault_namespace_path = module.bu_namespaces["Integrations"].path
   jwt_backend_path     = vault_jwt_auth_backend.int_jwt_gha.path
   role_name            = "gha-workflow"
@@ -22,7 +22,7 @@ module "gha_jwt_worklfow" {
 module "gha_jwt_workflow_2" {
   #source               = "../terraform-vault-gha-access"
   source               = "app.terraform.io/philbrook/gha-access/vault"
-  version              = "1.1.1"
+  version              = "1.1.2"
   vault_namespace_path = module.bu_namespaces["Integrations"].path
   jwt_backend_path     = vault_jwt_auth_backend.int_jwt_gha.path
   role_name            = "gha-test-addditional"

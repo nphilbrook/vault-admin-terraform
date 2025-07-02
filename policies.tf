@@ -210,11 +210,25 @@ data "vault_policy_document" "ns_admin" {
     description  = "List things in prod"
   }
 
+  # AWS specific rules. These paths may not exist on all namespaces,
   rule {
     path         = "${each.key}/aws/config/rotate-root"
     capabilities = ["update"]
     description  = "Allow rotation of AWS root credentials"
   }
+
+  rule {
+    path         = "${each.key}/aws/config/root"
+    capabilities = ["read"]
+    description  = "Allow reading the AWS root config"
+  }
+
+  rule {
+    path         = "${each.key}/aws/roles*"
+    capabilities = ["read", "list"]
+    description  = "Allow list and reading AWS roles"
+  }
+  # End AWS specific rules
 
   rule {
     path         = "${each.key}/sys/capabilities-self"
